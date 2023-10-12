@@ -1,24 +1,47 @@
 package com.example.youtubevideo
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
-import com.example.youtubevideo.databinding.ActivityMainBinding
+import com.example.youtubevideo.databinding.ActivityWebviewBinding
+import com.google.android.material.appbar.MaterialToolbar
 
+class ActivityWebview : AppCompatActivity() {
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityWebviewBinding
+    private lateinit var toolbar: MaterialToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityWebviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         if (savedInstanceState == null) {
             // Carregar a página somente se a atividade for criada pela primeira vez
+            webView()
+        }
+
+        toolbar()
+    }
+
+    private fun toolbar() {
+        binding.toolbar.setNavigationOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            finish()
+        }
+
+        val toolbarRefresh = binding.refresh
+
+        toolbarRefresh.setOnClickListener {
+            val animation = AnimationUtils.loadAnimation(this, R.anim.rotate_refresh)
+            toolbarRefresh.startAnimation(animation)
+
             webView()
         }
     }
@@ -33,8 +56,8 @@ class MainActivity : AppCompatActivity() {
         // Configurar um WebViewClient para abrir links no próprio WebView
         webView.webViewClient = WebViewClient()
 
-        val videoUrl = "https://youtu.be/monf_Z2hCfo"
-        webView.loadUrl(videoUrl)
+        val webViewUrl = "https://mega.nz/login"
+        webView.loadUrl(webViewUrl)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
